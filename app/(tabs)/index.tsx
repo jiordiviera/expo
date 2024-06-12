@@ -1,70 +1,50 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import {Image, StyleSheet, Platform, Button, Animated, Text, View} from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+
+import DateTimePicker, {DateTimePickerEvent} from '@react-native-community/datetimepicker';
+import {useState} from "react";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import ParallaxScrollView from "@/components/ParallaxScrollView";
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
-}
+    const [date, setDate] = useState<Date>(new Date());
+    const [showPicker, setShowPicker] = useState<boolean>(false);
+    const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+        const currentDate = selectedDate || date;
+        setShowPicker(false);
+        setDate(currentDate);
+    }
+    // const user = auth().currentUser
+    return (<ParallaxScrollView
+            headerBackgroundColor={{light: '#D0D0D0', dark: '#353636'}}
+            headerImage={<Ionicons size={310} name="code-slash" style={styles.headerImage}/>}>
+            <View>
+                <Button title="Make date now" onPress={() => setShowPicker(true)}/>
+                {showPicker && (
+                    <DateTimePicker mode="date" value={date} display="default" onChange={handleDateChange}/>
+                )
+                }
 
+            </View>
+            <View>
+                <Text>Selected
+                    Date: {date.toDateString()}</Text>
+            </View>
+
+        </ParallaxScrollView>
+
+    );
+
+}
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+    headerImage: {
+        color: '#808080',
+        bottom: -90,
+        left: -35,
+        position: 'absolute',
+    },
+    titleContainer: {
+        flexDirection: 'row',
+        gap: 8,
+    },
 });
